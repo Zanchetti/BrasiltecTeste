@@ -1,0 +1,93 @@
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            padding: 0 10px;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient( #2d3031, #3e4142, #1b1a1a);
+        }
+        
+         ::selection {
+            color: #fff;
+            background: #ffffff;
+        }
+        
+        .wrapper {
+            width: 600px;
+            padding: 35px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        input {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .wrapper .content-box {
+            padding: 13px 20px 0;
+            border-radius: 10px;
+            border: 4px solid #ffffff;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .justify-center {
+            justify-content: center;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .inline-block {
+            display: inline-block;
+        }
+        
+        .content-box .content {
+            margin-top: 17px;
+            display: flex;
+            padding: 12px 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        button {
+            width: 105px;
+            color: #ffffff;
+            padding: 8px 0;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 15px;
+            border: 3px solid #ffffff;
+            background: none;
+            transition: transform 0.2s ease;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        button:active {
+            transform: scale(0.89);
+        }
+        
+        button:hover {
+            background: #292828;
+        }
