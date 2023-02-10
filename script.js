@@ -47,12 +47,22 @@ email.onchange = function() {
     }
 };
 
+const nome = document.getElementById("nome");
+nome.onchange = function() {
+    if (nome.value !== "" && nome.value !== undefined) {
+        $("#nome").css("border-color", "green");
+    } else {
+        $("#nome").css("border-color", "red");
+    }
+};
+
 function TestaEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
 
 function TestaCPF(strCPF) {
+    strCPF = strCPF.replace(/[^\d]+/g, '');
     var Soma;
     var Resto;
     Soma = 0;
@@ -124,31 +134,14 @@ function TestaCNPJ(cnpj) {
     return true;
 }
 
-function validateForm() {
-    var emailCheck = 1;
-    var cpfCheck = 1;
-    var cnpjCheck = 1;
-    var nome = document.getElementById("nome").value;
-    var email = document.getElementById("email").value;
+$('#main_form').on('submit', function() {
     var cpf = document.getElementById("cpf_input").value;
     var cnpj = document.getElementById("cnpj_input").value;
 
-    if (TestaCNPJ(cnpj.value) == false) {
-        cnpjCheck = 0;
-    }
-    if (TestaEmail(email.value) == false) {
-        emailCheck = 0;
-    }
-    if (TestaCPF(cpf.value) == false) {
-        cpfCheck = 0;
-    }
-    if (nome == "" || emailCheck == 0) {
-        alert("Preencha corretamente todos os campos!");
-        return false;
-    } else if (cpfCheck == 0 ^ cnpjCheck == 0) {
+    if (TestaCNPJ(cnpj) === TestaCPF(cpf)) {
         alert("Preencha corretamente todos os campos!");
         return false;
     } else {
         return true;
     }
-}
+});
