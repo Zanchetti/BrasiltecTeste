@@ -14,25 +14,39 @@ if (!$conexao) {
 $nome = filter_input(INPUT_POST, 'nome');
 $email = filter_input(INPUT_POST, 'email');
 $cpf = filter_input(INPUT_POST, 'cpf');
+$cpf = preg_replace('/[^0-9]/', '', $cpf);
 $cnpj = filter_input(INPUT_POST, 'cnpj');
+$cnpj = preg_replace('/[^0-9]/is', '', $cnpj);
 
 // Verifica se o CPF ou o CNPJ já existem na tabela
-$check_cpf = "SELECT * FROM cadastro WHERE cpf = '$cpf'";
-$check_cnpj = "SELECT * FROM cadastro WHERE cnpj = '$cnpj'";
-$result_cpf = mysqli_query($conexao, $check_cpf);
-$result_cnpj = mysqli_query($conexao, $check_cnpj);
+$check_cpf = "SELECT * FROM cadastro WHERE cpf = ?";
+$check_cnpj = "SELECT * FROM cadastro WHERE cnpj = ?";
+
+$stmt_cpf = mysqli_prepare($conexao, $check_cpf);
+mysqli_stmt_bind_param($stmt_cpf, "s", $cpf);
+mysqli_stmt_execute($stmt_cpf);
+$result_cpf = mysqli_stmt_get_result($stmt_cpf);
+
+$stmt_cnpj = mysqli_prepare($conexao, $check_cnpj);
+mysqli_stmt_bind_param($stmt_cnpj, "s", $cnpj);
+mysqli_stmt_execute($stmt_cnpj);
+$result_cnpj = mysqli_stmt_get_result($stmt_cnpj);
 
 if (!empty($cpf) && empty($cnpj)) {
     if (mysqli_num_rows($result_cpf) > 0) {
         // CPF ou CNPJ já existem na tabela
         $response = array("status" => "error", "message" => "Este CPF já existe no banco de dados");
     } else if (validaCPF($cpf) === true) {    // Insere os dados na tabela
-        $cadastro = "INSERT INTO cadastro (nome, email, cpf, cnpj) VALUES ('$nome', '$email', '$cpf', '$cnpj')";
-        if (mysqli_query($conexao, $cadastro)) {
+        $stmt = mysqli_prepare($conexao, "INSERT INTO cadastro (nome, email, cpf, cnpj) VALUES (?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, 'ssss', $nome, $email, $cpf, $cnpj);
+
+        if (mysqli_stmt_execute($stmt)) {
             $response = array("status" => "success");
         } else {
             $response = array("status" => "error");
         }
+
+        mysqli_stmt_close($stmt);
     } else {
         $response = array("status" => "error", "message" => "Insira um CPF válido!");
     }
@@ -41,12 +55,16 @@ if (!empty($cpf) && empty($cnpj)) {
         // CPF ou CNPJ já existem na tabela
         $response = array("status" => "error", "message" => "Este CNPJ já existe no banco de dados");
     } else if (ValidaCnpj($cnpj) === true) {    // Insere os dados na tabela
-        $cadastro = "INSERT INTO cadastro (nome, email, cpf, cnpj) VALUES ('$nome', '$email', '$cpf', '$cnpj')";
-        if (mysqli_query($conexao, $cadastro)) {
+        $stmt = mysqli_prepare($conexao, "INSERT INTO cadastro (nome, email, cpf, cnpj) VALUES (?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, 'ssss', $nome, $email, $cpf, $cnpj);
+
+        if (mysqli_stmt_execute($stmt)) {
             $response = array("status" => "success");
         } else {
             $response = array("status" => "error");
         }
+
+        mysqli_stmt_close($stmt);
     } else {
         $response = array("status" => "error", "message" => "Insira um CNPJ válido!");
     }
